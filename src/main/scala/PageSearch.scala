@@ -1,5 +1,5 @@
 import scala.math.log
-import scala.collection.parallel.CollectionConverters._
+//import scala.collection.parallel.CollectionConverters._
 
 object PageSearch {
     /**

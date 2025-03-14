@@ -16,7 +16,12 @@ import scala.util.Sorting
         val pages: Map[String, WebPage] = mapWebPages(loadWebPages()) // completed for you
 
         // TODO: Measure the importance of each page using one of the functions in PageRank
-        val rankedPages: List[RankedWebPage] = List() // call PageRank.???? here
+        val rankedPages: List[RankedWebPage] = PageRank.equal(pages).map(
+          (k,v) => {
+            val wp = pages(k)
+            new RankedWebPage(wp.id, wp.name, wp.url, wp.text, wp.links, v)
+          }
+        ).toList // call PageRank.???? here
 
         // Get user input then perform search until ":quit" is entered
         var query: String = ""
@@ -30,12 +35,17 @@ import scala.util.Sorting
             terms != List(":quit")
         } do {
           // TODO: Measure the textual match of each page to these terms using one of the functions in PageSearch
-          val searchedPages: List[SearchedWebPage] = List() // call PageSearch.???? here
+          val searchedPages: List[SearchedWebPage] = PageSearch.count(
+            rankedPages,terms
+          ).zip(rankedPages).map(
+            (count,page) => new SearchedWebPage(page, count)
+          ) // call PageSearch.???? here
+
           // normalize the ranges for weight and textmatch on these pages
           val pageArray = SearchedWebPageNormalize.normalize(searchedPages).toArray
           // sort this array based on the chosen averaging scheme i.e.
           //    (ArithmeticOrdering || GeometricOrdering || HarmonicOrdering)
-          Sorting.quickSort(pageArray)(NameOrdering) // TODO: change this from name ordering to something else!!!
+          Sorting.quickSort(pageArray)(GeometricOrdering) // TODO: change this from name ordering to something else!!!
           // Print the top ranked pages in descending order
           for p <- pageArray.reverse.slice(0, 10) do println(f"${p.name}%-15s  ${p.url}")
           // print a divider to make reading the results easier
@@ -46,8 +56,9 @@ import scala.util.Sorting
 // Load a List of WebPage objects from the packaged prolandwiki.csv file
 def loadWebPages(): List[WebPage] = {
     // create an input stream to the proglangwiki.csv
-    val fh = Source.fromInputStream(
-        getClass.getClassLoader.getResourceAsStream("proglangwiki.csv"))
+  val fh = Source.fromFile("C:\\Users\\FOERSTAT21\\OneDrive - Grove City College\\Semester 8\\Parallel\\Work\\Code\\Projects\\src\\main\\resources\\proglangwiki.csv")
+//    val fh = Source.fromInputStream(
+//        getClass.getClassLoader.getResourceAsStream("proglangwiki.csv"))
     // load all pages from the file line by line
     val pages = (for line <- fh.getLines yield {
         val id::name::url::text::links = line.split(",").toList // warning, but will work
