@@ -9,7 +9,7 @@ object PageSearch {
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
         for page <- pages yield
-        (for s <- page.text.split(' ') if query contains s yield 1).sum.toDouble // if a query contains a term twice it will not be counted twice for a given word
+        (for s <- page.text.split(' ').toList /* .toList needed? */ if query contains s yield 1.0).sum // if a query contains a term twice it will not be counted twice for a given word
     }
 
     /**
