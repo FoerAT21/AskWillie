@@ -1,5 +1,5 @@
 import scala.util.Random
-import scala.collection.parallel.CollectionConverters._
+// import scala.collection.parallel.CollectionConverters._
 
 object PageRank {
     /**
