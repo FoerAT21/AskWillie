@@ -7,7 +7,7 @@ object PageRank {
      * @return      A map of page.id to a weight of 1.0 for those same WebPage objects
      */
     def equal(pages: Map[String, WebPage]): Map[String, Double] = {
-        for (s, wp) <- pages yield (wp.id, 1.0) // correct??
+        for (s, wp) <- pages yield (s, 1.0) // correct??
     }
 
     /**
