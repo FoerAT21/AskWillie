@@ -8,7 +8,8 @@ object PageSearch {
      * @return       a list of the number of times any of the terms appeared in each page in the same order as given
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        List() // TODO: implement this method and remove this stub
+        for page <- pages yield
+        (for s <- page.text.split(' ') if query contains s yield 1).sum.toDouble // if a query contains a term twice it will not be counted twice for a given word
     }
 
     /**
