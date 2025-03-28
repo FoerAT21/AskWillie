@@ -8,18 +8,17 @@ object PageSearch {
      * @return       a list of the number of times any of the terms appeared in each page in the same order as given
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        val lowerQuery = query.map(_.toLowerCase)
-        for page <- pages yield
-        (for s <- page.text.split(' ') if lowerQuery contains s.toLowerCase yield 1.0).sum // if a query contains a term twice it will not be counted twice for a given word
+        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word).toDouble).sum)
     }
 
     /**
      * @param pages a list of RankedWebPage objects to be searched
      * @param query a list of search terms to be counted in those pages
-     * @return      a list of the term-frequency of the occurrences of those terms in each page in the same order given
+     * @return      a list of the term-frequency of the occurrences of
+     *              those terms in each page in the same order given
      */
     def tf(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        List() // TODO: implement this method and remove this stub
+        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word).toDouble).sum/page.text.length)
     }
 
     /**

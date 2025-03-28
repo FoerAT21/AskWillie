@@ -58,6 +58,7 @@ def loadWebPages(): List[WebPage] = {
     // create an input stream to the proglangwiki.csv
     val fh = Source.fromInputStream(
         getClass.getClassLoader.getResourceAsStream("proglangwiki.csv"))
+//    val fh = Source.fromFile("C:\\Users\\FOERSTAT21\\OneDrive - Grove City College\\Semester 8\\Parallel\\Work\\Code\\AskWillie\\src\\main\\resources\\proglangwiki.csv")
     // load all pages from the file line by line
     val pages = (for line <- fh.getLines yield {
         val id::name::url::text::links = line.split(",").toList // warning, but will work
