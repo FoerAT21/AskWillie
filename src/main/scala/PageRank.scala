@@ -7,13 +7,7 @@ object PageRank {
      * @return      A map of page.id to a weight of 1.0 for those same WebPage objects
      */
     def equal(pages: Map[String, WebPage]): Map[String, Double] = {
-        for(key <- pages.keys) do {
-            println(key)
-        }
-        for(key <- pages.keys) do {
-            println("Links " + pages(key).links)
-        }
-        pages.map((id, page) => (id,1.0))
+        pages.map((id, page) => (id,1.0)).toMap
     }
 
     /**

@@ -5,7 +5,8 @@ object PageSearch {
     /**
      * @param pages  a list of RankedWebPage objects to be searched
      * @param query  a list of search terms to be counted in those pages
-     * @return       a list of the number of times any of the terms appeared in each page in the same order as given
+     * @return       a list of the number of times any of the terms appeared
+     *               in each page in the same order as given
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
         pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word).toDouble).sum)
@@ -18,7 +19,8 @@ object PageSearch {
      *              those terms in each page in the same order given
      */
     def tf(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word).toDouble).sum/page.text.length)
+        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(
+            _ contains word).toDouble).sum/page.text.length)
     }
 
     /**
@@ -27,6 +29,17 @@ object PageSearch {
      * @return      a list of the TF-IDF score for each page in the same order given
      */
     def tfidf(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        List() // TODO: implement this method and remove this stub
+        val idfs = idf(pages, query)
+        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(
+            _ contains word).toDouble * idfs(word)).sum / page.text.length)
+    }
+
+    def idf(pages : List [RankedWebPage], query: List[String]): Map[String, Double] = {
+        val NUMDOCS = pages.length
+        query.map(word => {
+            val D = pages.count(page => page.text contains word).toDouble + 1
+            (word, log(NUMDOCS.toDouble / D))
+          }
+        ).toMap
     }
 }
