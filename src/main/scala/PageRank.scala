@@ -24,7 +24,8 @@ object PageRank {
         val S = 10000
         val N = pages.size
 
-        def combineMaps(map1 : Map[String, Double], map2: Map[String, Double]): Map[String, Double] = {
+        def combineMaps(map1 : Map[String, Double],
+                        map2: Map[String, Double]): Map[String, Double] = {
             map1.map((id , count) => (id, count+map2(id)))
         }
 
