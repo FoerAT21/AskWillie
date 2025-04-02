@@ -29,12 +29,11 @@ object PageRank {
             map1.map((id , count) => (id, count+map2(id)))
         }
 
-        val finalCounts = (0 until S).par.map { _ =>
+        (0 until S).view.par.map { _ =>
             val startingPage = pages.keysIterator.drop(Random.nextInt(pages.size)).next()
             walker(pages, startingPage, pages.par.map((id, _) => (id, 0.0)).seq)
-        }.foldLeft(pages.map((id, _) => (id, 0.0)))(combineMaps)
-
-        finalCounts.map((id, count) => (id, count+1/(S+N).toDouble))
+        }.foldLeft(pages.map((id, _) => (id, 0.0)))(combineMaps).map(
+            (id, count) => (id, count+1/(S+N).toDouble))
     }
 
     @tailrec
