@@ -38,7 +38,7 @@ object PageRank {
     }
 
     @tailrec
-    def walker(pages : Map[String, WebPage], currPageId : String, currMap : Map[String,Double], clicks : Int = 0): Map[String,Double] = {
+    private def walker(pages : Map[String, WebPage], currPageId : String, currMap : Map[String,Double], clicks : Int = 0): Map[String,Double] = {
         if clicks == 100 then currMap
         else {
             val currentPage: WebPage = pages(currPageId)
@@ -52,7 +52,7 @@ object PageRank {
         }
     }
 
-    def followLink(pageid : String, currMap: Map[String,Double]): Map[String, Double] = {
+    private def followLink(pageid : String, currMap: Map[String,Double]): Map[String, Double] = {
         currMap.map((id,count) => if pageid != id then (id,count) else (id,count+1.0))
     }
 }
