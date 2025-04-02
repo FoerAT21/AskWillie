@@ -9,7 +9,7 @@ object PageSearch {
      *               in each page in the same order as given
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
-        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word).toDouble).sum)
+        pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(_ contains word.toLowerCase).toDouble).sum)
     }
 
     /**
@@ -20,7 +20,7 @@ object PageSearch {
      */
     def tf(pages: List[RankedWebPage], query: List[String]): List[Double] = {
         pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(
-            _ contains word).toDouble).sum/page.text.length)
+            _ contains word.toLowerCase).toDouble).sum/page.text.length)
     }
 
     /**
@@ -31,14 +31,14 @@ object PageSearch {
     def tfidf(pages: List[RankedWebPage], query: List[String]): List[Double] = {
         val idfs = idf(pages, query)
         pages.map(page => query.map(word => page.text.toLowerCase.split(" ").count(
-            _ contains word).toDouble * idfs(word)).sum / page.text.length)
+            _ contains word.toLowerCase).toDouble * idfs(word.toLowerCase)).sum / page.text.length)
     }
 
     def idf(pages : List [RankedWebPage], query: List[String]): Map[String, Double] = {
         val NUMDOCS = pages.length
         query.map(word => {
-            val D = pages.count(page => page.text contains word).toDouble + 1
-            (word, log(NUMDOCS.toDouble / D))
+            val D = pages.count(page => page.text contains word.toLowerCase).toDouble + 1
+            (word.toLowerCase, log(NUMDOCS.toDouble / D))
           }
         ).toMap
     }

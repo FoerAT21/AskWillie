@@ -1,6 +1,6 @@
 import scala.annotation.tailrec
 import scala.util.Random
-//import scala.collection.parallel.CollectionConverters._
+import scala.collection.parallel.CollectionConverters._
 
 object PageRank {
     /**
@@ -29,9 +29,9 @@ object PageRank {
             map1.map((id , count) => (id, count+map2(id)))
         }
 
-        val finalCounts = (0 until S).map { _ =>
-            val startingPage = pages.keys.toSeq(Random.nextInt(pages.size))
-            walker(pages, startingPage, pages.map((id, _) => (id, 0.0)))
+        val finalCounts = (0 until S).par.map { _ =>
+            val startingPage = pages.keysIterator.drop(Random.nextInt(pages.size)).next()
+            walker(pages, startingPage, pages.par.map((id, _) => (id, 0.0)).seq)
         }.foldLeft(pages.map((id, _) => (id, 0.0)))(combineMaps)
 
         finalCounts.map((id, count) => (id, count+1/(S+N).toDouble))
@@ -46,7 +46,7 @@ object PageRank {
                 if (Random.nextDouble() <= 0.85 && currentPage.links.nonEmpty)
                     currentPage.links(Random.nextInt(currentPage.links.length))
                 else
-                    pages.keys.toSeq(Random.nextInt(pages.size))
+                    pages.keysIterator.drop(Random.nextInt(pages.size)).next()
 
             walker(pages, newPage, followLink(newPage, currMap), clicks + 1)
         }
